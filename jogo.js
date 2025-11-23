@@ -1,9 +1,7 @@
 import { Jogador } from "./jogador.js";
-import { Arma } from "./armas.js";
+import { Arma } from "./arma.js";
 
-// =======================================================
-// VARIÁVEIS DO JOGO
-// =======================================================
+// Variaveis do jogo
 const canvas = document.getElementById("tela");
 const ctx = canvas.getContext("2d");
 
@@ -12,9 +10,6 @@ const tiros = [];
 
 let frame = 0;
 
-// =======================================================
-// DESENHO COM EFEITOS ESPECIAIS
-// =======================================================
 function desenharTiro(ctx, tiro) {
     ctx.save();
 
@@ -37,7 +32,7 @@ function desenharTiro(ctx, tiro) {
         return;
     }
 
-    // TIRO ONDA (zig-zag)
+    // TIRO ONDA zig-zag
     if (tiro.tipoEspecial === "onda") {
         ctx.fillStyle = "cyan";
 
@@ -82,9 +77,7 @@ function desenharTiro(ctx, tiro) {
     ctx.restore();
 }
 
-// =======================================================
-// ATUALIZA TUDO
-// =======================================================
+
 function atualizar() {
     jogador.atualizar(tiros);
 
@@ -92,7 +85,7 @@ function atualizar() {
     for (let i = tiros.length - 1; i >= 0; i--) {
         let t = tiros[i];
 
-        // se o tiro usa velX/velY (diagonais)
+        // se o tiro usa velX/velY diagonais
         if (t.velX !== undefined) {
             t.x += t.velX;
             t.y -= t.velY;
@@ -107,9 +100,6 @@ function atualizar() {
     }
 }
 
-// =======================================================
-// DESENHA TUDO
-// =======================================================
 function desenhar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -120,9 +110,8 @@ function desenhar() {
     tiros.forEach(t => desenharTiro(ctx, t));
 }
 
-// =======================================================
-// LOOP PRINCIPAL
-// =======================================================
+// loop principal
+
 function loop() {
     atualizar();
     desenhar();

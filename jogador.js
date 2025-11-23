@@ -1,4 +1,4 @@
-import { Arma } from "./armas.js";
+import { Arma } from "./arma.js";
 
 export class Jogador {
     constructor() {
@@ -14,7 +14,12 @@ export class Jogador {
 
         // Arma começa no nível 1
         this.nivelArma = 1;
-        this.arma = new Arma(this.nivelArma);
+        this.tiposDeArma = [
+            "simples", "simples_rapida", "dupla_frente", "dupla_rapida",
+            "diagonal_dupla", "tripla_frente", "espalhamento_5", "espalhamento_7",
+            "rajada", "onda", "laser_fino", "laser_grosso"
+        ];
+        this.arma = new Arma(this.tiposDeArma[this.nivelArma - 1]);
 
         // Eventos de teclado
         document.addEventListener("keydown", (e) => this.teclas[e.key] = true);
@@ -22,28 +27,15 @@ export class Jogador {
     }
 
     mover() {
-        if (this.teclas["ArrowLeft"] && this.x > 0) {
-            this.x -= this.velocidade;
-        }
-        if (this.teclas["ArrowRight"] && this.x + this.largura < 600) {
-            this.x += this.velocidade;
-        }
-        if (this.teclas["ArrowUp"] && this.y > 0) {
-            this.y -= this.velocidade;
-        }
-        if (this.teclas["ArrowDown"] && this.y + this.altura < 800) {
-            this.y += this.velocidade;
-        }
+        if (this.teclas["ArrowLeft"] && this.x > 0) this.x -= this.velocidade;
+        if (this.teclas["ArrowRight"] && this.x + this.largura < 600) this.x += this.velocidade;
+        if (this.teclas["ArrowUp"] && this.y > 0) this.y -= this.velocidade;
+        if (this.teclas["ArrowDown"] && this.y + this.altura < 800) this.y += this.velocidade;
     }
 
     atirar(listaTiros) {
-        if (this.teclas[" "] || this.teclas["Space"]) {
-            const novosTiros = this.arma.disparar(
-                this.x + this.largura / 2,
-                this.y
-            );
-            listaTiros.push(...novosTiros);
-        }
+        const novosTiros = this.arma.disparar(this.x + this.largura / 2, this.y);
+        listaTiros.push(...novosTiros);
     }
 
     atualizar(listaTiros) {
@@ -56,13 +48,13 @@ export class Jogador {
         ctx.fillRect(this.x, this.y, this.largura, this.altura);
     }
 
-    // =======================================================
-    // NOVO: EVOLUIR ARMA APÓS BOSS
-    // =======================================================
     evoluirArma() {
         if (this.nivelArma < 12) {
             this.nivelArma++;
-            this.arma = new Arma(this.nivelArma);
+            this.arma = new Arma(this.tiposDeArma[this.nivelArma - 1]);
+
+            // Aumenta velocidade da arma (diminuindo cooldown)
+            this.arma.cooldownMax = Math.max(2, 12 - this.nivelArma);
         }
     }
 }

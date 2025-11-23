@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nome do Jogo</title>
+    <title>Space War</title>
 
     <style>
         body {
@@ -22,7 +22,14 @@
     </style>
 </head>
 <body>
+
     <canvas id="tela" width="600" height="800"></canvas>
-    <script type="module" src="jogo.js"></script>
+
+    <!-- Carrega o jogo principal que importa os outros módulos -->
+    <script type="module">
+    import "./jogo.js";
+</script>
+
+
 </body>
 </html>
