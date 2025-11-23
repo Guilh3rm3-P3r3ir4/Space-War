@@ -1,0 +1,76 @@
+/* ===========================================
+   EFEITOS VISUAIS DAS ARMAS
+   Cada classe é usada como referência no canvas.
+   =========================================== */
+
+/* 1 — tiro simples */
+.tiro-simples {
+    --cor: #ffff66;
+    --glow: 5px;
+}
+
+/* 2 — tiro simples rápido */
+.tiro-rapido {
+    --cor: #ffdd44;
+    --glow: 7px;
+}
+
+/* 3 — dupla frente */
+.tiro-duplo {
+    --cor: #ff9933;
+    --glow: 8px;
+}
+
+/* 4 — dupla rápida */
+.tiro-duplo-rapido {
+    --cor: #ff8800;
+    --glow: 10px;
+}
+
+/* 5 — dupla diagonal */
+.tiro-diagonal {
+    --cor: #ff5500;
+    --glow: 10px;
+}
+
+/* 6 — tripla frente */
+.tiro-triplo {
+    --cor: #ff3300;
+    --glow: 12px;
+}
+
+/* 7 — espalhamento 5 */
+.tiro-esp5 {
+    --cor: #ff0044;
+    --glow: 12px;
+}
+
+/* 8 — espalhamento 7 */
+.tiro-esp7 {
+    --cor: #ff0099;
+    --glow: 13px;
+}
+
+/* 9 — rajada */
+.tiro-rajada {
+    --cor: #cc00ff;
+    --glow: 14px;
+}
+
+/* 10 — onda */
+.tiro-onda {
+    --cor: #9900ff;
+    --glow: 14px;
+}
+
+/* 11 — laser fino */
+.tiro-laser-fino {
+    --cor: #66ccff;
+    --glow: 20px;
+}
+
+/* 12 — laser grosso */
+.tiro-laser-grosso {
+    --cor: #33ccff;
+    --glow: 30px;
+}
