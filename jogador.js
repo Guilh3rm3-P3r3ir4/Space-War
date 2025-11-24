@@ -4,11 +4,16 @@ export class Jogador {
     constructor() {
         this.x = 300;
         this.y = 700;
+<<<<<<< HEAD
         this.largura = 100;
         this.altura = 100;
 
         // padding da hitbox (reduz levemente a caixa de colisão sem alterar a arte)
         this.hitboxPadding = 16; // diminui 16px no total (8px por lado)
+=======
+        this.largura = 150;
+        this.altura = 150;
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 
         this.velocidade = 5;
         this.vida = 3;
@@ -52,6 +57,7 @@ export class Jogador {
 
     desenhar(ctx) {
         ctx.drawImage(this.imagem, this.x, this.y, this.largura, this.altura);
+<<<<<<< HEAD
     }
 
     // retorna a hitbox usada para colisões (reduzida em relação à imagem)
@@ -64,6 +70,9 @@ export class Jogador {
             altura: this.altura - pad
         };
     }
+=======
+       }
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 
     evoluirArma() {
         if (this.nivelArma < 12) {

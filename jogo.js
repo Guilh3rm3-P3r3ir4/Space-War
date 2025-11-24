@@ -1,6 +1,9 @@
 import { Jogador } from "./jogador.js";
 import { Arma } from "./arma.js";
+<<<<<<< HEAD
 import { Inimigo } from "./inimigo.js";
+=======
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 
 // Variaveis do jogo
 const canvas = document.getElementById("tela");
@@ -8,6 +11,7 @@ const ctx = canvas.getContext("2d");
 
 const jogador = new Jogador();
 const tiros = [];
+<<<<<<< HEAD
 const tirosInimigo = [];
 let inimigo = new Inimigo(1);
 let inimigoLevel = 1;
@@ -20,6 +24,11 @@ function rectsOverlap(x1, y1, w1, h1, x2, y2, w2, h2) {
     return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
 }
 
+=======
+
+let frame = 0;
+
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 function desenharTiro(ctx, tiro) {
     ctx.save();
 
@@ -89,6 +98,7 @@ function desenharTiro(ctx, tiro) {
 
 
 function atualizar() {
+<<<<<<< HEAD
     if (gameOver) return;
 
     jogador.atualizar(tiros);
@@ -105,10 +115,25 @@ function atualizar() {
             t.x += t.velX;
             t.y -= t.velY;
         }
+=======
+    jogador.atualizar(tiros);
+
+    // Atualizar tiros
+    for (let i = tiros.length - 1; i >= 0; i--) {
+        let t = tiros[i];
+
+        // se o tiro usa velX/velY diagonais
+        if (t.velX !== undefined) {
+            t.x += t.velX;
+            t.y -= t.velY;
+        }
+        // se é laser ou tiro normal
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
         else {
             t.y -= t.velocidade;
         }
 
+<<<<<<< HEAD
         // colisão com inimigo
         if (inimigo && rectsOverlap(t.x, t.y, t.largura, t.altura, inimigo.x, inimigo.y, inimigo.largura, inimigo.altura)) {
             // remove o tiro
@@ -151,6 +176,10 @@ function atualizar() {
 
         // remover se fora da tela
         if (t.y < -200 || t.y > 1200 || t.x < -200 || t.x > 900) tirosInimigo.splice(i, 1);
+=======
+        // remover se sair da tela
+        if (t.y < -100) tiros.splice(i, 1);
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
     }
 }
 
@@ -162,6 +191,7 @@ function desenhar() {
 
     // tiros
     tiros.forEach(t => desenharTiro(ctx, t));
+<<<<<<< HEAD
 
     // desenhar inimigo
     if (inimigo) inimigo.desenhar(ctx);
@@ -179,15 +209,23 @@ function desenhar() {
         ctx.fillText("Game Over", 200, 400);
         ctx.restore();
     }
+=======
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 }
 
 // loop principal
 
 function loop() {
+<<<<<<< HEAD
     frame++;
     atualizar();
     desenhar();
     if (!gameOver) requestAnimationFrame(loop);
+=======
+    atualizar();
+    desenhar();
+    requestAnimationFrame(loop);
+>>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 }
 
 loop();
