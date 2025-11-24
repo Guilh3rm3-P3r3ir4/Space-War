@@ -4,8 +4,8 @@ export class Jogador {
     constructor() {
         this.x = 300;
         this.y = 700;
-        this.largura = 40;
-        this.altura = 40;
+        this.largura = 150;
+        this.altura = 150;
 
         this.velocidade = 5;
         this.vida = 3;
@@ -24,6 +24,10 @@ export class Jogador {
         // Eventos de teclado
         document.addEventListener("keydown", (e) => this.teclas[e.key] = true);
         document.addEventListener("keyup", (e) => this.teclas[e.key] = false);
+        // imagem da nave
+        this.imagem = new Image();
+        this.imagem.src = "./imagens/nave.png"; // caminho da imagem
+
     }
 
     mover() {
@@ -44,9 +48,8 @@ export class Jogador {
     }
 
     desenhar(ctx) {
-        ctx.fillStyle = "white";
-        ctx.fillRect(this.x, this.y, this.largura, this.altura);
-    }
+        ctx.drawImage(this.imagem, this.x, this.y, this.largura, this.altura);
+       }
 
     evoluirArma() {
         if (this.nivelArma < 12) {
