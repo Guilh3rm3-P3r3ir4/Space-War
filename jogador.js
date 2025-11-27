@@ -2,8 +2,8 @@ import { Arma } from "./arma.js";
 
 export class Jogador {
     constructor() {
-        this.x = 300;
-        this.y = 700;
+        this.x = 255;
+        this.y = 595;
         // tamanho reduzido para jogabilidade
         this.largura = 100;
         this.altura = 100;
@@ -41,10 +41,23 @@ export class Jogador {
     }
 
     mover() {
+        // Movimentação por teclado
         if (this.teclas["ArrowLeft"] && this.x > 0) this.x -= this.velocidade;
-        if (this.teclas["ArrowRight"] && this.x + this.largura < 600) this.x += this.velocidade;
+        if (this.teclas["ArrowRight"] && this.x + this.largura < 510) this.x += this.velocidade;
         if (this.teclas["ArrowUp"] && this.y > 0) this.y -= this.velocidade;
-        if (this.teclas["ArrowDown"] && this.y + this.altura < 800) this.y += this.velocidade;
+        if (this.teclas["ArrowDown"] && this.y + this.altura < 680) this.y += this.velocidade;
+
+        // Movimentação por touch (celular)
+        if (window.moveX !== undefined && window.moveY !== undefined) {
+            this.x += window.moveX / 5; // dividir para suavizar
+            this.y += window.moveY / 5;
+
+            // manter dentro da tela
+            if (this.x < 0) this.x = 0;
+            if (this.x + this.largura > 510) this.x = 510 - this.largura;
+            if (this.y < 0) this.y = 0;
+            if (this.y + this.altura > 680) this.y = 680 - this.altura;
+        }
     }
 
     atirar(listaTiros) {
@@ -59,7 +72,7 @@ export class Jogador {
 
     desenhar(ctx) {
         ctx.drawImage(this.imagem, this.x, this.y, this.largura, this.altura);
-    
+
     }
 
     // retorna hitbox reduzida para colisões (melhora jogabilidade)

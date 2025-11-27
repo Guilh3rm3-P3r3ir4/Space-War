@@ -14,7 +14,7 @@ export class Inimigo {
         }
 
         // posição inicial (topo, x aleatório)
-        this.x = Math.random() * (600 - this.largura);
+        this.x = Math.random() * (510 - this.largura);
         this.y = 30 + Math.random() * 40;
 
 
@@ -40,11 +40,11 @@ export class Inimigo {
     atualizar(frame, jogador, listaTirosInimigo) {
         // movimento horizontal senoidal + descida lenta
         this.x += Math.sin((frame + this.spawnFrame) / 40) * this.moveSpeed;
-       // this.y += this.moveSpeedY;
+        // this.y += this.moveSpeedY;
 
         // manter dentro da tela
         if (this.x < 0) this.x = 0;
-        if (this.x + this.largura > 600) this.x = 600 - this.largura;
+        if (this.x + this.largura > 510) this.x = 510 - this.largura;
 
         // atirar aleatoriamente em direção ao jogador
         if (this.shootCooldown > 0) this.shootCooldown--;

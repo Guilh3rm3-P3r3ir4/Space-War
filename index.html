@@ -15,7 +15,7 @@
         <img id="btn-start" src="./imagens/botao_start.png" alt="Start">
     </div>
 
-    <canvas id="tela" width="600" height="800"></canvas>
+    <canvas id="tela" width="510" height="680"></canvas>
 
     <!-- Tela de Game Over -->
     <div id="gameover-screen" style="display:none;">
@@ -32,13 +32,64 @@
         const recomecarBtn = document.getElementById("recomecar-btn");
         const sairBtn = document.getElementById("sair-btn");
 
+        // Detectar se é celular / touch
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        // Inicializar variáveis de movimento por touch globalmente
+        window.moveX = 0;
+        window.moveY = 0;
+
+        if (isTouchDevice) {
+            // Cria a área de toque para o joystick (invisível)
+            const touchArea = document.createElement("div");
+            touchArea.id = "touch-area";
+            document.body.appendChild(touchArea);
+
+            // Estilo do touch area (ocupando toda a tela)
+            touchArea.style.position = "absolute";
+            touchArea.style.top = "0";
+            touchArea.style.left = "0";
+            touchArea.style.width = "100vw";
+            touchArea.style.height = "100vh";
+            touchArea.style.zIndex = "1000"; // acima do canvas
+            touchArea.style.touchAction = "none"; // evita scroll
+            touchArea.style.background = "transparent";
+
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            touchArea.addEventListener("touchstart", (e) => {
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+            });
+
+            touchArea.addEventListener("touchmove", (e) => {
+                const touch = e.touches[0];
+                window.moveX = touch.clientX - touchStartX;
+                window.moveY = touch.clientY - touchStartY;
+
+                // Limitar valor máximo de movimentação
+                const maxMove = 30; // força do joystick
+                window.moveX = Math.max(-maxMove, Math.min(maxMove, window.moveX));
+                window.moveY = Math.max(-maxMove, Math.min(maxMove, window.moveY));
+
+                e.preventDefault(); // impede scroll da página
+            });
+
+            touchArea.addEventListener("touchend", () => {
+                window.moveX = 0;
+                window.moveY = 0;
+            });
+        }
+
         btnStart.addEventListener("click", () => {
             homeScreen.style.display = "none";
             canvas.style.display = "block";
 
             import("./jogo.js");
         });
-            // Recomeçar jogo sem voltar para Home
+        // Recomeçar jogo sem voltar para Home
         recomecarBtn.addEventListener("click", () => {
             gameOverScreen.style.display = "none";
             canvas.style.display = "block";
@@ -58,4 +109,5 @@
     </script>
 
 </body>
+
 </html>

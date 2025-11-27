@@ -161,7 +161,7 @@ function atualizar() {
             t.y -= t.velocidade;
         }
 
-        
+
         // colisão com inimigo
         if (inimigo && rectsOverlap(t.x, t.y, t.largura, t.altura, inimigo.x, inimigo.y, inimigo.largura, inimigo.altura)) {
             tiros.splice(i, 1);
@@ -213,9 +213,9 @@ function atualizar() {
             jogador.vida--;
             tirosInimigo.splice(i, 1);
 
-        if (jogador.vida <= 0) {
-            gameOver = true;
-        }
+            if (jogador.vida <= 0) {
+                gameOver = true;
+            }
 
         }
 
@@ -239,7 +239,7 @@ function desenhar() {
     if (inimigo) inimigo.desenhar(ctx);
 
     tirosInimigo.forEach(t => desenharTiro(ctx, t));
-    
+
     // botão som
     const icon = somLigado ? imgSomLigado : imgSomDesligado;
     ctx.drawImage(icon, botaoSom.x, botaoSom.y, botaoSom.largura, botaoSom.altura);
@@ -263,9 +263,9 @@ function desenhar() {
                 titulo.textContent = "Game Over";
             }
         }
-    }   
+    }
 
-  
+
 }
 
 function loop() {
@@ -276,7 +276,7 @@ function loop() {
 musicaFundo.play();
 
 // Função para reiniciar o jogo completamente
-window.resetGame = function() {
+window.resetGame = function () {
     // Reset do jogador
     jogador.x = 300;
     jogador.y = 700;
