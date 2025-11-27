@@ -28,6 +28,12 @@ export class Jogador {
         // imagem da nave
         this.imagem = new Image();
         this.imagem.src = "./imagens/nave.png"; // caminho da imagem
+        // imagens de vida
+        this.imgVidaCheia = new Image();
+        this.imgVidaCheia.src = "./imagens/vida_cheia.png";
+
+        this.imgVidaVazia = new Image();
+        this.imgVidaVazia.src = "./imagens/vida_vazia.png";
 
         // hitbox reduzida (padding interno) — aumentada para colisão mais permissiva
         this.hitboxPadding = 18;
@@ -53,6 +59,7 @@ export class Jogador {
 
     desenhar(ctx) {
         ctx.drawImage(this.imagem, this.x, this.y, this.largura, this.altura);
+    
     }
 
     // retorna hitbox reduzida para colisões (melhora jogabilidade)
@@ -66,12 +73,35 @@ export class Jogador {
     }
 
     evoluirArma() {
-        if (this.nivelArma < 12) {
+        // só evolui se ainda tiver tipos de arma disponíveis
+        if (this.nivelArma < this.tiposDeArma.length) {
             this.nivelArma++;
             this.arma = new Arma(this.tiposDeArma[this.nivelArma - 1]);
-
-            // Aumenta velocidade da arma (diminuindo cooldown)
-            this.arma.cooldownMax = Math.max(2, 12 - this.nivelArma);
         }
     }
+
+
+    desenharVidas(ctx) {
+        const tamanho = 40;
+        const margem = 10;
+
+        for (let i = 0; i < 3; i++) {
+            let img = (i < this.vida) ? this.imgVidaCheia : this.imgVidaVazia;
+            ctx.drawImage(img, margem + i * (tamanho + 5), ctx.canvas.height - tamanho - margem, tamanho, tamanho);
+        }
+    }
+    trocarArmaAleatoria() {
+        // escolhe um índice aleatório diferente da arma atual
+        let novoNivel;
+        do {
+            novoNivel = Math.floor(Math.random() * this.tiposDeArma.length) + 1;
+        } while (novoNivel === this.nivelArma);
+
+        this.nivelArma = novoNivel;
+        this.arma = new Arma(this.tiposDeArma[this.nivelArma - 1]);
+
+        // ajusta cooldown conforme a potência da arma
+        this.arma.cooldownMax = Math.max(2, 12 - this.nivelArma);
+    }
+
 }

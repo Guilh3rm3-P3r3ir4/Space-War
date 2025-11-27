@@ -2,9 +2,52 @@ import { Jogador } from "./jogador.js";
 import { Arma } from "./arma.js";
 import { Inimigo } from "./inimigo.js";
 
+
+// imagem de fundo
+const fundo = new Image();
+fundo.src = "./imagens/fundo_game.png";
+
+// música de fundo
+const musicaFundo = new Audio("./audios/musica_fundo.mp3");
+musicaFundo.loop = true;
+musicaFundo.volume = 0.5;
+
+let inimigosDerrotados = 0;
+let nivelDaArma = 1;
+const MAX_NIVEIS_ARMA = 7;
+
 // Variaveis do jogo
 const canvas = document.getElementById("tela");
 const ctx = canvas.getContext("2d");
+
+let somLigado = true;
+
+const imgSomLigado = new Image();
+imgSomLigado.src = "./imagens/som_ligado.png";
+
+const imgSomDesligado = new Image();
+imgSomDesligado.src = "./imagens/som_desligado.png";
+
+const botaoSom = { x: canvas.width - 60, y: 10, largura: 50, altura: 50 };
+canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    if (
+        mx >= botaoSom.x && mx <= botaoSom.x + botaoSom.largura &&
+        my >= botaoSom.y && my <= botaoSom.y + botaoSom.altura
+    ) {
+        somLigado = !somLigado;
+
+        if (somLigado) {
+            musicaFundo.play();
+        } else {
+            musicaFundo.pause();
+        }
+    }
+});
+
 
 const jogador = new Jogador();
 const tiros = [];
@@ -118,24 +161,37 @@ function atualizar() {
             t.y -= t.velocidade;
         }
 
+        
         // colisão com inimigo
         if (inimigo && rectsOverlap(t.x, t.y, t.largura, t.altura, inimigo.x, inimigo.y, inimigo.largura, inimigo.altura)) {
             tiros.splice(i, 1);
             const morreu = inimigo.receberTiro();
+
             if (morreu) {
-                // se era a última fase (10), jogador vence
-                if (inimigoLevel >= 10) {
+                inimigosDerrotados++;
+
+                // evolui arma a cada 3 inimigos
+                if (inimigosDerrotados % 3 === 0) {
+                    jogador.evoluirArma();
+                }
+
+                // fim do jogo após 30 inimigos
+                if (inimigosDerrotados >= 30) {
                     gameOver = true;
                     gameWin = true;
                     inimigo = null;
                 } else {
-                    inimigoLevel++;
-                    inimigo = new Inimigo(inimigoLevel);
+                    // calcula próximo nível de inimigo de 1 a 10 repetidamente
+                    const proximoNivel = ((inimigosDerrotados - 1) % 10) + 1;
+                    inimigo = new Inimigo(proximoNivel);
                 }
-                break;
+                break; // sai do loop de tiros, pois o inimigo morreu
             }
-            continue;
+
+            continue; // continua para o próximo tiro
         }
+
+
 
         // remover se sair da tela
         if (t.y < -100 || t.y > canvas.height + 200) tiros.splice(i, 1);
@@ -154,9 +210,13 @@ function atualizar() {
         // colisão com jogador (fallback se getHitbox não existir)
         const hb = (typeof jogador.getHitbox === 'function') ? jogador.getHitbox() : { x: jogador.x, y: jogador.y, largura: jogador.largura, altura: jogador.altura };
         if (rectsOverlap(t.x, t.y, t.largura, t.altura, hb.x, hb.y, hb.largura, hb.altura)) {
-            gameOver = true;
+            jogador.vida--;
             tirosInimigo.splice(i, 1);
-            break;
+
+        if (jogador.vida <= 0) {
+            gameOver = true;
+        }
+
         }
 
         if (t.y < -200 || t.y > canvas.height + 400 || t.x < -200 || t.x > canvas.width + 200) tirosInimigo.splice(i, 1);
@@ -166,29 +226,46 @@ function atualizar() {
 }
 
 function desenhar() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // desenhar fundo
+    ctx.drawImage(fundo, 0, 0, canvas.width, canvas.height);
+
 
     jogador.desenhar(ctx);
+    jogador.desenharVidas(ctx);
+
 
     tiros.forEach(t => desenharTiro(ctx, t));
 
     if (inimigo) inimigo.desenhar(ctx);
 
     tirosInimigo.forEach(t => desenharTiro(ctx, t));
+    
+    // botão som
+    const icon = somLigado ? imgSomLigado : imgSomDesligado;
+    ctx.drawImage(icon, botaoSom.x, botaoSom.y, botaoSom.largura, botaoSom.altura);
 
     if (gameOver) {
-        ctx.save();
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
-        ctx.font = "48px sans-serif";
-        if (gameWin) {
-            ctx.fillText("Você venceu!", Math.floor(canvas.width / 2 - 140), Math.floor(canvas.height / 2));
-        } else {
-            ctx.fillText("Game Over", Math.floor(canvas.width / 2 - 120), Math.floor(canvas.height / 2));
+        // Esconde o canvas do jogo
+        canvas.style.display = "none";
+
+        // Mostra a tela de Game Over
+        const gameOverScreen = document.getElementById("gameover-screen");
+        if (gameOverScreen) {
+            gameOverScreen.style.display = "flex"; // assume que a div está com display: none por padrão
         }
-        ctx.restore();
-    }
+
+        // Opcional: para quando o jogador venceu
+        const titulo = document.getElementById("gameover-titulo");
+        if (titulo) {
+            if (gameWin) {
+                titulo.textContent = "Você venceu!";
+            } else {
+                titulo.textContent = "Game Over";
+            }
+        }
+    }   
+
+  
 }
 
 function loop() {
@@ -196,5 +273,31 @@ function loop() {
     atualizar();
     desenhar();
 }
+musicaFundo.play();
+
+// Função para reiniciar o jogo completamente
+window.resetGame = function() {
+    // Reset do jogador
+    jogador.x = 300;
+    jogador.y = 700;
+    jogador.vida = 3;
+    jogador.nivelArma = 1;
+    jogador.arma = new Arma(jogador.tiposDeArma[jogador.nivelArma - 1]);
+
+    // Reset do inimigo
+    inimigoLevel = 1;
+    inimigo = new Inimigo(inimigoLevel);
+
+    // Limpar tiros
+    tiros.length = 0;
+    tirosInimigo.length = 0;
+
+    // Reset das flags e frame
+    gameOver = false;
+    gameWin = false;
+    frame = 0;
+};
+
+window.loop = loop;
 
 loop();

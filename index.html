@@ -5,34 +5,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Space War</title>
-
-    <style>
-        body {
-            margin: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        canvas {
-            background: #111;
-            border: 2px solid #444;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+    <div id="home-screen">
+        <img id="home-bg" src="./imagens/home.jpeg" alt="Home">
+        <img id="btn-start" src="./imagens/botao_start.png" alt="Start">
+    </div>
+
     <canvas id="tela" width="600" height="800"></canvas>
 
-    <!-- Carrega o jogo principal que importa os outros módulos -->
+    <!-- Tela de Game Over -->
+    <div id="gameover-screen" style="display:none;">
+        <img id="gameover-bg" src="./imagens/game_over.jpeg" alt="Game Over">
+        <img id="recomecar-btn" src="./imagens/botao_recomecar.png" alt="Recomeçar">
+        <img id="sair-btn" src="./imagens/botao_sair.png" alt="Sair">
+    </div>
+
     <script type="module">
-        import "./jogo.js";
+        const btnStart = document.getElementById("btn-start");
+        const homeScreen = document.getElementById("home-screen");
+        const canvas = document.getElementById("tela");
+        const gameOverScreen = document.getElementById("gameover-screen");
+        const recomecarBtn = document.getElementById("recomecar-btn");
+        const sairBtn = document.getElementById("sair-btn");
+
+        btnStart.addEventListener("click", () => {
+            homeScreen.style.display = "none";
+            canvas.style.display = "block";
+
+            import("./jogo.js");
+        });
+            // Recomeçar jogo sem voltar para Home
+        recomecarBtn.addEventListener("click", () => {
+            gameOverScreen.style.display = "none";
+            canvas.style.display = "block";
+            window.resetGame(); // reseta todas as variáveis
+            loop(); // reinicia o loop do jogo
+        });
+
+
+
+
+
+
+        // Sair do jogo
+        sairBtn.addEventListener("click", () => {
+            window.close(); // tenta fechar a aba (funciona só em algumas situações)
+        });
     </script>
 
-
 </body>
-
 </html>

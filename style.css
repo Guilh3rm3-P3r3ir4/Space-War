@@ -1,3 +1,72 @@
+/* Reset e corpo */
+body {
+    margin: 0;
+    background: #000;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Canvas do jogo */
+#tela {
+    display: none; /* canvas escondido no início */
+    width: 600px;
+    height: 800px;
+    background: #111;
+    border: 2px solid #444;
+}
+
+/* Telas Home e Game Over */
+#home-screen, #gameover-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Imagens de fundo */
+#home-bg, #gameover-bg {
+    width: auto;
+    height: 100%;
+    object-fit: contain; /* mantém proporção */
+    display: block;
+}
+
+/* Botões padrão */
+#btn-start, #recomecar-btn, #sair-btn {
+    position: absolute;
+    cursor: pointer;
+    display: block; /* clique só na imagem */
+    width: 200px;   /* ajuste largura padrão */
+    height: auto;   /* mantém proporção */
+}
+
+/* Botão Start centralizado na Home */
+#btn-start {
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Botões Recomeçar e Sair lado a lado no Game Over */
+#recomecar-btn {
+    top: 70%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+}
+
+#sair-btn {
+    top: 70%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+}
+
 /* 1 — tiro simples */
 .tiro-simples {
     --cor: #ffff66;
@@ -56,16 +125,4 @@
 .tiro-onda {
     --cor: #9900ff;
     --glow: 14px;
-}
-
-/* 11 — laser fino */
-.tiro-laser-fino {
-    --cor: #66ccff;
-    --glow: 20px;
-}
-
-/* 12 — laser grosso */
-.tiro-laser-grosso {
-    --cor: #33ccff;
-    --glow: 30px;
 }

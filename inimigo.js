@@ -40,7 +40,7 @@ export class Inimigo {
     atualizar(frame, jogador, listaTirosInimigo) {
         // movimento horizontal senoidal + descida lenta
         this.x += Math.sin((frame + this.spawnFrame) / 40) * this.moveSpeed;
-        this.y += this.moveSpeedY;
+       // this.y += this.moveSpeedY;
 
         // manter dentro da tela
         if (this.x < 0) this.x = 0;
@@ -72,7 +72,7 @@ export class Inimigo {
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
         // velocidade do projétil aumenta levemente com o nível
-        const baseSpeed = 3 + (this.level - 1) * 0.3;
+        const baseSpeed = 2 + (this.level - 1) * 0.3;
 
         // O jogo existente trata tiros com {velX, velY} onde o código faz t.x += velX; t.y -= velY;
         // Para que o tiro vá na direção do jogador, calculamos velX normal e velY invertido.
