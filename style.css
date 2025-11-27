@@ -11,15 +11,20 @@ body {
 
 /* Canvas do jogo */
 #tela {
-    display: none; /* canvas escondido no início */
-    width: 600px;
-    height: 800px;
+    display: none;
+    /* canvas escondido no início */
+    max-width: 510px;
+    max-height: 680px;
+    width: 100vw;
+    height: auto;
+    aspect-ratio: 3 / 4;
     background: #111;
     border: 2px solid #444;
 }
 
 /* Telas Home e Game Over */
-#home-screen, #gameover-screen {
+#home-screen,
+#gameover-screen {
     position: absolute;
     top: 0;
     left: 0;
@@ -31,20 +36,27 @@ body {
 }
 
 /* Imagens de fundo */
-#home-bg, #gameover-bg {
+#home-bg,
+#gameover-bg {
     width: auto;
     height: 100%;
-    object-fit: contain; /* mantém proporção */
+    object-fit: contain;
+    /* mantém proporção */
     display: block;
 }
 
 /* Botões padrão */
-#btn-start, #recomecar-btn, #sair-btn {
+#btn-start,
+#recomecar-btn,
+#sair-btn {
     position: absolute;
     cursor: pointer;
-    display: block; /* clique só na imagem */
-    width: 200px;   /* ajuste largura padrão */
-    height: auto;   /* mantém proporção */
+    display: block;
+    /* clique só na imagem */
+    width: clamp(100px, 20vw, 200px);
+    /* largura responsiva: mínimo 100px, máximo 200px, 20% da viewport */
+    height: auto;
+    /* mantém proporção */
 }
 
 /* Botão Start centralizado na Home */

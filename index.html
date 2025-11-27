@@ -39,60 +39,78 @@
         window.moveX = 0;
         window.moveY = 0;
 
-        if (isTouchDevice) {
-            // Cria a área de toque para o joystick (invisível)
-            const touchArea = document.createElement("div");
-            touchArea.id = "touch-area";
-            document.body.appendChild(touchArea);
+        // Variável para armazenar touchArea (será criada ao iniciar o jogo)
+        let touchArea = null;
 
-            // Estilo do touch area (ocupando toda a tela)
-            touchArea.style.position = "absolute";
-            touchArea.style.top = "0";
-            touchArea.style.left = "0";
-            touchArea.style.width = "100vw";
-            touchArea.style.height = "100vh";
-            touchArea.style.zIndex = "1000"; // acima do canvas
-            touchArea.style.touchAction = "none"; // evita scroll
-            touchArea.style.background = "transparent";
+        // Função para criar o joystick invisível
+        function createTouchArea() {
+            if (isTouchDevice && !touchArea) {
+                touchArea = document.createElement("div");
+                touchArea.id = "touch-area";
+                document.body.appendChild(touchArea);
 
-            let touchStartX = 0;
-            let touchStartY = 0;
+                // Estilo do touch area (ocupando toda a tela)
+                touchArea.style.position = "absolute";
+                touchArea.style.top = "0";
+                touchArea.style.left = "0";
+                touchArea.style.width = "100vw";
+                touchArea.style.height = "100vh";
+                touchArea.style.zIndex = "1000"; // acima do canvas
+                touchArea.style.touchAction = "none"; // evita scroll
+                touchArea.style.background = "transparent";
 
-            touchArea.addEventListener("touchstart", (e) => {
-                const touch = e.touches[0];
-                touchStartX = touch.clientX;
-                touchStartY = touch.clientY;
-            });
+                let touchStartX = 0;
+                let touchStartY = 0;
 
-            touchArea.addEventListener("touchmove", (e) => {
-                const touch = e.touches[0];
-                window.moveX = touch.clientX - touchStartX;
-                window.moveY = touch.clientY - touchStartY;
+                touchArea.addEventListener("touchstart", (e) => {
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                });
 
-                // Limitar valor máximo de movimentação
-                const maxMove = 30; // força do joystick
-                window.moveX = Math.max(-maxMove, Math.min(maxMove, window.moveX));
-                window.moveY = Math.max(-maxMove, Math.min(maxMove, window.moveY));
+                touchArea.addEventListener("touchmove", (e) => {
+                    const touch = e.touches[0];
+                    window.moveX = touch.clientX - touchStartX;
+                    window.moveY = touch.clientY - touchStartY;
 
-                e.preventDefault(); // impede scroll da página
-            });
+                    // Limitar valor máximo de movimentação
+                    const maxMove = 30; // força do joystick
+                    window.moveX = Math.max(-maxMove, Math.min(maxMove, window.moveX));
+                    window.moveY = Math.max(-maxMove, Math.min(maxMove, window.moveY));
 
-            touchArea.addEventListener("touchend", () => {
+                    e.preventDefault(); // impede scroll da página
+                });
+
+                touchArea.addEventListener("touchend", () => {
+                    window.moveX = 0;
+                    window.moveY = 0;
+                });
+            }
+        }
+
+        // Função para destruir o joystick
+        function destroyTouchArea() {
+            if (touchArea) {
+                touchArea.remove();
+                touchArea = null;
                 window.moveX = 0;
                 window.moveY = 0;
-            });
+            }
         }
 
         btnStart.addEventListener("click", () => {
             homeScreen.style.display = "none";
             canvas.style.display = "block";
+            createTouchArea(); // ativa joystick ao iniciar jogo
 
             import("./jogo.js");
         });
         // Recomeçar jogo sem voltar para Home
         recomecarBtn.addEventListener("click", () => {
+            destroyTouchArea(); // desativa joystick
             gameOverScreen.style.display = "none";
             canvas.style.display = "block";
+            createTouchArea(); // reativa joystick para próxima partida
             window.resetGame(); // reseta todas as variáveis
             loop(); // reinicia o loop do jogo
         });
@@ -104,7 +122,9 @@
 
         // Sair do jogo
         sairBtn.addEventListener("click", () => {
-            window.close(); // tenta fechar a aba (funciona só em algumas situações)
+            destroyTouchArea(); // desativa joystick ao sair
+            gameOverScreen.style.display = "none";
+            homeScreen.style.display = "flex"; // volta para home
         });
     </script>
 
