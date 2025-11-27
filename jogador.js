@@ -49,8 +49,18 @@ export class Jogador {
 
         // Movimentação por touch (celular)
         if (window.moveX !== undefined && window.moveY !== undefined) {
-            this.x += window.moveX / 5; // dividir para suavizar
-            this.y += window.moveY / 5;
+            // Sensibilidade muito baixa: divisor muito grande e deslocamento por frame mínimo
+            const divisor = 80; // muito maior -> resposta muito lenta
+            let dx = window.moveX / divisor;
+            let dy = window.moveY / divisor;
+
+            // limitar deslocamento máximo por frame para evitar saltos
+            const maxMove = 0.5; // pixels por frame (suave, permite sub-pixel)
+            dx = Math.max(-maxMove, Math.min(maxMove, dx));
+            dy = Math.max(-maxMove, Math.min(maxMove, dy));
+
+            this.x += dx;
+            this.y += dy;
 
             // manter dentro da tela
             if (this.x < 0) this.x = 0;
