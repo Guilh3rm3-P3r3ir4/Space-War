@@ -49,8 +49,8 @@ export class Jogador {
 
         // Movimentação por touch (celular)
         if (window.moveX !== undefined && window.moveY !== undefined) {
-            // Sensibilidade muito baixa: divisor muito grande e deslocamento por frame mínimo
-            const divisor = 80; // muito maior -> resposta muito lenta
+            // Sensibilidade ajustada: divisor menor que 80 para resposta um pouco mais rápida
+            const divisor = 60; // menor -> um pouco mais responsivo
             let dx = window.moveX / divisor;
             let dy = window.moveY / divisor;
 
