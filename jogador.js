@@ -4,16 +4,9 @@ export class Jogador {
     constructor() {
         this.x = 300;
         this.y = 700;
-<<<<<<< HEAD
+        // tamanho reduzido para jogabilidade
         this.largura = 100;
         this.altura = 100;
-
-        // padding da hitbox (reduz levemente a caixa de colisão sem alterar a arte)
-        this.hitboxPadding = 16; // diminui 16px no total (8px por lado)
-=======
-        this.largura = 150;
-        this.altura = 150;
->>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 
         this.velocidade = 5;
         this.vida = 3;
@@ -36,6 +29,9 @@ export class Jogador {
         this.imagem = new Image();
         this.imagem.src = "./imagens/nave.png"; // caminho da imagem
 
+        // hitbox reduzida (padding interno) — aumentada para colisão mais permissiva
+        this.hitboxPadding = 18;
+
     }
 
     mover() {
@@ -57,22 +53,17 @@ export class Jogador {
 
     desenhar(ctx) {
         ctx.drawImage(this.imagem, this.x, this.y, this.largura, this.altura);
-<<<<<<< HEAD
     }
 
-    // retorna a hitbox usada para colisões (reduzida em relação à imagem)
+    // retorna hitbox reduzida para colisões (melhora jogabilidade)
     getHitbox() {
-        const pad = this.hitboxPadding;
         return {
-            x: this.x + pad / 2,
-            y: this.y + pad / 2,
-            largura: this.largura - pad,
-            altura: this.altura - pad
+            x: this.x + this.hitboxPadding,
+            y: this.y + this.hitboxPadding,
+            largura: Math.max(4, this.largura - this.hitboxPadding * 2),
+            altura: Math.max(4, this.altura - this.hitboxPadding * 2)
         };
     }
-=======
-       }
->>>>>>> 0f28ba609719570195cfef2c2217cd1737059dbb
 
     evoluirArma() {
         if (this.nivelArma < 12) {

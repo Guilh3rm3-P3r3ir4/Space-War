@@ -5,9 +5,13 @@ export class Inimigo {
         this.largura = 90;
         this.altura = 90;
 
-        // imagem do inimigo (se existir em imagens/naveinimiga.png)
+        // imagem do inimigo por nível: nave1..nave9, e naveinimiga no nível 10
         this.imagem = new Image();
-        this.imagem.src = "./imagens/naveinimiga.png";
+        if (this.level >= 1 && this.level <= 9) {
+            this.imagem.src = `./imagens/nave${this.level}.png`;
+        } else {
+            this.imagem.src = "./imagens/naveinimiga.png";
+        }
 
         // posição inicial (topo, x aleatório)
         this.x = Math.random() * (600 - this.largura);
@@ -24,8 +28,9 @@ export class Inimigo {
         // cooldown menor => ataca mais rápido conforme o nível aumenta
         this.shootCooldownMax = Math.max(10, 60 - (level - 1) * 5);
 
-        // vida em 'número de tiros do jogador' necessários (1,2,3...)
-        this.shotsToDie = level;
+        // vida em 'número de tiros do jogador' necessários
+        // agora começa em 3 no nível 1 e aumenta 1 por nível (level 1 -> 3, level 2 -> 4, ...)
+        this.shotsToDie = level + 2;
         this.shotsReceived = 0;
 
         // estado para animação
@@ -74,7 +79,7 @@ export class Inimigo {
         const vx = (dx / dist) * baseSpeed;
         const vy = -(dy / dist) * baseSpeed;
 
-        return [{ x: cx, y: cy, largura: 8, altura: 8, velX: vx, velY: vy, tipoVisual: ".tiro-inimigo" }];
+        return [{ x: cx, y: cy, largura: 12, altura: 12, velX: vx, velY: vy, tipo: 'tiro-inimigo' }];
     }
 
     receberTiro() {
@@ -93,11 +98,32 @@ export class Inimigo {
             ctx.fillRect(this.x, this.y, this.largura, this.altura);
         }
 
-        // mostrar nível do inimigo em vez de barra de vida
-        ctx.fillStyle = "white";
-        ctx.font = "18px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Lv " + this.level, this.x + this.largura / 2, this.y - 10);
+        // mostrar vidas como ícones (imagem coracao) acima da nave
+        const vidas = Math.max(0, this.shotsToDie - this.shotsReceived);
+        const iconSize = 14;
+        const spacing = 6;
+        const totalWidth = vidas * iconSize + Math.max(0, vidas - 1) * spacing;
+        const startX = this.x + this.largura / 2 - totalWidth / 2;
+        const centerY = this.y - 12;
+
+        if (window.__coracaoImg === undefined) {
+            window.__coracaoImg = new Image();
+            window.__coracaoImg.src = './imagens/coracao.png';
+        }
+        const heart = window.__coracaoImg;
+
+        for (let i = 0; i < vidas; i++) {
+            const sx = startX + i * (iconSize + spacing);
+            if (heart && heart.complete && heart.naturalWidth > 0) {
+                ctx.drawImage(heart, sx, centerY - iconSize / 2, iconSize, iconSize);
+            } else {
+                // fallback: círculo vermelho
+                ctx.fillStyle = 'red';
+                ctx.beginPath();
+                ctx.arc(sx + iconSize / 2, centerY, iconSize / 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
 
         ctx.restore();
     }
